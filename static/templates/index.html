@@ -15,39 +15,16 @@
     
 </head>
 <body>
-    <h2> ff </h2>
-    <!-- <div id="map" style="width: 100%; height: 400px;"></div>
-
-    <script>
-        // Kakao 지도 API 스크립트 로드 완료 후 실행되는 함수
-        function initMap() {
-            // 지도 생성
-            var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-            var mapOption = {
-                center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심 좌표
-                level: 3 // 지도의 확대 레벨
-            };
-            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성 및 객체 리턴
-        }
-    
-        // Kakao 지도 API 스크립트 로드
-        window.onload = function () {
-            kakao.maps.load(initMap); // initMap 함수 실행
-        };
-    </script> -->
+    <h2> 내 위치 가져오기 </h2>
 
     <div id="map"></div>
 
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
     <script>
         function initMap() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude; // 위도
                     var lng = position.coords.longitude; // 경도
-
-                    console.log("위도 : " + lat);
-                    console.log("경도 : " + lng);
 
                     var mapContainer = document.getElementById('map');
                     var mapOption = {
@@ -61,6 +38,10 @@
                         position: markerPosition
                     });
                     marker.setMap(map);
+
+                    document.getElementById('latitude').textContent = lat;
+                    document.getElementById('longitude').textContent = lng;
+
                 });
             } else {
                 alert('Geolocation이 지원되지 않는 브라우저입니다.');
@@ -71,6 +52,9 @@
             kakao.maps.load(initMap);
         };
     </script>
+
+     <p> 현재 위도: <span id="latitude"></span></p>
+     <p> 현재 경도: <span id="longitude"></span></p>
     
 </body>
 </html>
