@@ -40,6 +40,7 @@
                     
                     var hos1 = {
                         name: '성수 병원1',
+                        addr: '서울특별시 성동구 성수동2가 아차산로 92 에스타워 303호',
                         latitude: 37.5422582, // 병원1 위치 위도
                         longitude: 127.0445666 // 병원1 위치 경도
                     };
@@ -47,12 +48,14 @@
 
                     var hos2 = {
                         name: '성수 병원2',
+                        addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
                         latitude: 37.540540, // 병원1 위치 위도
                         longitude: 127.051046 // 병원2 위치 경도
                     };
 
                     var hos3 = {
                         name: '부산 병원',
+                        addr:'부산광역시 사상구 새벽로 226',
                         latitude: 35.159987, // 병원 위치 위도
                         longitude: 128.980434 // 병원 위치 경도
                     };
@@ -72,6 +75,10 @@
 
                     document.getElementById('latitude').textContent = lat;
                     document.getElementById('longitude').textContent = lng;
+
+                    console.log(hos1);
+                    console.log(hos2);
+                    console.log(hos3);
 
                     // 병원 1에 빨간 마커 추가
                     var hos1MarkerPosition = new kakao.maps.LatLng(hos1.latitude, hos1.longitude);
