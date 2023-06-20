@@ -1,5 +1,5 @@
 # map-project
-카카오맵 API 기반 위치 정보 받아오기
+## 카카오맵 API 기반 위치 정보 받아오기
 
 index.html - 현재위치가져오기
 search.html - 현재위치(x), api 검색결과 제공
