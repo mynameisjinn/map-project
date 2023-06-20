@@ -104,6 +104,18 @@
                     });
                     hos2Marker.setMap(map);
 
+                    // 병원 3에 빨간 마커 추가
+                    var hos3MarkerPosition = new kakao.maps.LatLng(hos3.latitude, hos3.longitude);
+                    var hos3Marker = new kakao.maps.Marker({
+                        position: hos3MarkerPosition,
+                        image: new kakao.maps.MarkerImage(
+                            'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+                            new kakao.maps.Size(64, 69),
+                            { offset: new kakao.maps.Point(27, 69) }
+                        )
+                    });
+                    hos3Marker.setMap(map);
+
 
                     // 객체1 위치와의 거리 계산
                     var distance = calculateDistance(lat, lng, hos1.latitude, hos1.longitude);
@@ -144,22 +156,34 @@
     </script>
     <p> 검색  <input> <button>확인</button></p>
 
-     <p> 현재 위치 위도: <span id="latitude"></span></p>
-     <p> 현재 위치 경도: <span id="longitude"></span></p>
-     <p> 병원1 이름: <span id="hos1Name"></span></p>
-     <p> 병원1 위치 위도: <span id="hos1Latitude"></span></p>
-     <p> 병원1 위치 경도: <span id="hos1Longitude"></span></p>
-     <p> 현재 위치와 병원1 위치의 거리: <span id="distance1"></span> km</p>
-     <p> ------------------------------------------------------------------</p>
-     <p> 병원2 이름: <span id="hos2Name"></span></p>
-     <p> 병원2 위치 위도: <span id="hos2Latitude"></span></p>
-     <p> 병원2 위치 경도: <span id="hos2Longitude"></span></p>
-     <p> 현재 위치와 병원2 위치의 거리: <span id="distance2"></span> km</p>
-     <p> ------------------------------------------------------------------</p>
-     <p> 병원3 이름: <span id="hos3Name"></span></p>
-     <p> 병원3 위치 위도: <span id="hos3Latitude"></span></p>
-     <p> 병원3 위치 경도: <span id="hos3Longitude"></span></p>
-     <p> 현재 위치와 병원3 위치의 거리: <span id="distance3"></span> km</p>
+    <div>
+        <p> 현재 위치 위도: <span id="latitude"></span></p>
+        <p> 현재 위치 경도: <span id="longitude"></span></p>
+    </div>
+    <div class="content">
+        <p> ------------------------------------------------------------------</p>
+        <div class="hos-info">
+            <p> 병원1 이름: <span id="hos1Name"></span></p>
+            <p> 병원1 위치 위도: <span id="hos1Latitude"></span></p>
+            <p> 병원1 위치 경도: <span id="hos1Longitude"></span></p>
+            <p> 현재 위치와 병원3 위치의 거리: <span id="distance1"></span> km</p>
+        </div>
+        <p> ------------------------------------------------------------------</p>
+        <div class="hos-info">
+            <p> 병원2 이름: <span id="hos2Name"></span></p>
+            <p> 병원2 위치 위도: <span id="hos2Latitude"></span></p>
+            <p> 병원2 위치 경도: <span id="hos2Longitude"></span></p>
+            <p> 현재 위치와 병원2 위치의 거리: <span id="distance2"></span> km</p>
+        </div>
+        <p> ------------------------------------------------------------------</p>
+
+        <div class="hos-info">
+            <p> 병원3 이름: <span id="hos3Name"></span></p>
+            <p> 병원3 위치 위도: <span id="hos3Latitude"></span></p>
+            <p> 병원3 위치 경도: <span id="hos3Longitude"></span></p>
+            <p> 현재 위치와 병원3 위치의 거리: <span id="distance3"></span> km</p> 
+        </div>
+    </div>
     
 </body>
 </html>
