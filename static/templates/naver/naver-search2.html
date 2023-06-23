@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>네이버 search test22</title>
+    <meta charset="utf-8">
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+
+        .hos-marker {
+            position: relative;
+            width: 38px;
+            height: 58px;
+        }
+
+        .hos-marker .icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 38px;
+            height: 38px;
+            background-color: green;
+            border-radius: 50%;
+            text-align: center;
+        }
+
+        .hos-marker .shd {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            margin-top: -5px;
+            margin-left: -5px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>지도 예제</h1>
+    <div id="map"></div>
+
+    <script type="text/javascript"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
+    <script>
+        var mapOptions = {
+            center: new naver.maps.LatLng(37.5665, 126.9780), // 서울시청 좌표
+            zoom: 13
+        };
+        var map = new naver.maps.Map('map', mapOptions);
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // 지구 반지름 (단위: km)
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLon = (lon2 - lon1) * Math.PI / 180;
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var distance = R * c; // 거리 (단위: km)
+            return distance.toFixed(2); // 소수점 이하 2자리까지 반올림하여 반환
+        }
+
+        function initMap() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude; // 내 위치 위도
+                    var lng = position.coords.longitude; // 내 위치 경도
+                    var currentPosition = new naver.maps.LatLng(lat, lng);
+
+                    var mapContainer = document.getElementById('map');
+                    var mapOption = {
+                        center: new naver.maps.LatLng(lat, lng),
+                        level: 3
+                    };
+                    var map = new naver.maps.Map(mapContainer, mapOption);
+
+                    // 현재 위치 마커 생성
+                    var markerPosition = new naver.maps.LatLng(lat, lng);
+                    var marker = new naver.maps.Marker({
+                        position: markerPosition,
+                    });
+
+                    marker.setMap(map);
+
+                    var hos1 = {
+                        name: '성수 병원1',
+                        addr: '서울특별시 성동구 성수동2가 아차산로 92 에스타워 303호',
+                        latitude: 37.5422582, // 병원1 위치 위도
+                        longitude: 127.0445666 // 병원1 위치 경도
+                    };
+
+                    var hos2 = {
+                        name: '성수 병원2',
+                        addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
+                        latitude: 37.540540, // 병원1 위치 위도
+                        longitude: 127.051046 // 병원2 위치 경도
+                    };
+
+                    var hos3 = {
+                        name: '부산 병원',
+                        addr: '부산광역시 사상구 새벽로 226',
+                        latitude: 35.159987, // 병원 위치 위도
+                        longitude: 128.980434 // 병원 위치 경도
+                    };
+
+                    document.getElementById('latitude').textContent = lat;
+                    document.getElementById('longitude').textContent = lng;
+
+                    
+
+                    // 병원 1에 마커 추가
+                    var hos1MarkerPosition = new naver.maps.LatLng(hos1.latitude, hos1.longitude);
+                    var hos1Marker = new naver.maps.Marker({
+                        position: hos1MarkerPosition,
+                        map: map,
+                        title: 'Green',
+                        icon: {
+                            content: [
+                                '<div class="hos-marker">',
+                                '<div class="icon">',
+                                '<span class="shd"></span>',
+                                '</div>',
+                                '</div>'
+                            ].join(''),
+                            size: new naver.maps.Size(38, 58),
+                            anchor: new naver.maps.Point(19, 58),
+                        },
+                        draggable: false
+                    });
+
+                    hos1Marker.setMap(map);
+
+                    // 병원 2에 마커 추가
+                    var hos2MarkerPosition = new naver.maps.LatLng(hos2.latitude, hos2.longitude);
+                    var hos2Marker = new naver.maps.Marker({
+                        position: hos2MarkerPosition,
+                        map: map,
+                        title: 'Green',
+                        icon: {
+                            content: [
+                                '<div class="hos-marker">',
+                                '<div class="icon">',
+                                '<span class="shd"></span>',
+                                '</div>',
+                                '</div>'
+                            ].join(''),
+                            size: new naver.maps.Size(38, 58),
+                            anchor: new naver.maps.Point(19, 58),
+                        },
+                        draggable: false
+                    });
+
+                    hos2Marker.setMap(map);
+
+                    // 병원 3에 마커 추가
+                    var hos3MarkerPosition = new naver.maps.LatLng(hos3.latitude, hos3.longitude);
+                    var hos3Marker = new naver.maps.Marker({
+                        position: hos3MarkerPosition,
+                        map: map,
+                        title: 'Green',
+                        icon: {
+                            content: [
+                                '<div class="hos-marker">',
+                                '<div class="icon">',
+                                '<span class="shd"></span>',
+                                '</div>',
+                                '</div>'
+                            ].join(''),
+                            size: new naver.maps.Size(38, 58),
+                            anchor: new naver.maps.Point(19, 58),
+                        },
+                        draggable: false
+                    });
+
+                    hos3Marker.setMap(map);
+
+                    // 객체1 위치와의 거리 계산
+                    var distance = calculateDistance(lat, lng, hos1.latitude, hos1.longitude);
+
+                    document.getElementById('hos1Name').textContent = hos1.name;
+                    document.getElementById('hos1Latitude').textContent = hos1.latitude;
+                    document.getElementById('hos1Longitude').textContent = hos1.longitude;
+                    document.getElementById('distance1').textContent = distance;
+
+                    // 객체2 위치와의 거리 계산
+                    var distance = calculateDistance(lat, lng, hos2.latitude, hos2.longitude);
+
+                    document.getElementById('hos2Name').textContent = hos2.name;
+                    document.getElementById('hos2Latitude').textContent = hos2.latitude;
+                    document.getElementById('hos2Longitude').textContent = hos2.longitude;
+                    document.getElementById('distance2').textContent = distance;
+
+
+                    // 객체3 위치와의 거리 계산
+                    var distance = calculateDistance(lat, lng, hos3.latitude, hos3.longitude);
+
+                    document.getElementById('hos3Name').textContent = hos3.name;
+                    document.getElementById('hos3Latitude').textContent = hos3.latitude;
+                    document.getElementById('hos3Longitude').textContent = hos3.longitude;
+                    document.getElementById('distance3').textContent = distance;
+
+
+
+                });
+            } else {
+                alert("Geolocation을 지원하지 않는 브라우저입니다.");
+            }
+        }
+
+        initMap();
+
+        function handleKeyPress(e) {
+            if (e.keyCode === 13) {
+                search();
+            }
+        }
+
+        function search() {
+            var input = document.getElementById('searchInput').value;
+
+            if (input !== '') {
+                naver.maps.Service.geocode({
+                    address: input
+                }, function (status, response) {
+                    if (status === naver.maps.Service.Status.ERROR) {
+                        return alert('주소를 찾을 수 없습니다.');
+                    }
+
+                    var result = response.result;
+                    var items = result.items;
+                    var bounds = result.bounds;
+
+                    if (bounds) {
+                        map.setBounds(bounds);
+                    }
+
+                    if (items.length === 0) {
+                        return alert('검색 결과가 없습니다.');
+                    }
+
+                    var firstItem = items[0];
+                    var address = firstItem.address;
+                    var point = new naver.maps.Point(firstItem.point.x, firstItem.point.y);
+
+                    var searchMarker = new naver.maps.Marker({
+                        position: point,
+                        map: map
+                    });
+
+                    map.setCenter(point);
+                });
+            }
+        }
+    </script>
+
+    <input id="searchInput" type="text" onkeydown="handleKeyPress(event)" placeholder="주소를 검색하세요">
+    <button onclick="search()">확인</button></p>
+
+    <div>
+        <p>현재 위치 위도: <span id="latitude"></span></p>
+        <p>현재 위치 경도: <span id="longitude"></span></p>
+    </div>
+
+    <div id="content">
+
+        <div class="hos-info" id="hos1Info">
+            <p>병원1 이름: <span id="hos1Name"></span></p>
+            <p>병원1 위치 위도: <span id="hos1Latitude"></span></p>
+            <p>병원1 위치 경도: <span id="hos1Longitude"></span></p>
+            <p>현재 위치와 병원1 위치의 거리: <span id="distance1"></span> km</p>
+        </div>
+
+        <div class="hos-info" id="hos2Info">
+            <p>병원2 이름: <span id="hos2Name"></span></p>
+            <p>병원2 위치 위도: <span id="hos2Latitude"></span></p>
+            <p>병원2 위치 경도: <span id="hos2Longitude"></span></p>
+            <p>현재 위치와 병원2 위치의 거리: <span id="distance2"></span> km</p>
+        </div>
+
+
+        <div class="hos-info" id="hos3Info">
+            <p>병원3 이름: <span id="hos3Name"></span></p>
+            <p>병원3 위치 위도: <span id="hos3Latitude"></span></p>
+            <p>병원3 위치 경도: <span id="hos3Longitude"></span></p>
+            <p>현재 위치와 병원3 위치의 거리: <span id="distance3"></span> km</p>
+        </div>
+    </div>
+</body>
+
+</html>
