@@ -12,16 +12,16 @@
 
         .hos-marker {
             position: relative;
-            width: 38px;
-            height: 58px;
+            width: 32px;
+            height: 32px;
         }
 
         .hos-marker .icon {
             position: absolute;
             top: 0;
             left: 0;
-            width: 38px;
-            height: 38px;
+            width: 32px;
+            height: 32px;
             background-color: green;
             border-radius: 50%;
             text-align: center;
@@ -177,42 +177,7 @@
             }
         }
 
-        function search() {
-            var input = document.getElementById('searchInput').value;
-
-            if (input !== '') {
-                naver.maps.Service.geocode({
-                    address: input
-                }, function (status, response) {
-                    if (status === naver.maps.Service.Status.ERROR) {
-                        return alert('주소를 찾을 수 없습니다.');
-                    }
-
-                    var result = response.result;
-                    var items = result.items;
-                    var bounds = result.bounds;
-
-                    if (bounds) {
-                        map.setBounds(bounds);
-                    }
-
-                    if (items.length === 0) {
-                        return alert('검색 결과가 없습니다.');
-                    }
-
-                    var firstItem = items[0];
-                    var address = firstItem.address;
-                    var point = new naver.maps.Point(firstItem.point.x, firstItem.point.y);
-
-                    var searchMarker = new naver.maps.Marker({
-                        position: point,
-                        map: map
-                    });
-
-                    map.setCenter(point);
-                });
-            }
-        }
+        
     </script>
 
     <input id="searchInput" type="text" onkeydown="handleKeyPress(event)" placeholder="주소를 검색하세요">
@@ -290,13 +255,6 @@
                 location.reload(); // 페이지 리로드
             }
 
-            var visibleCount = [hos1Info, hos2Info, hos3Info].filter(function (info) {
-                return info.style.display !== 'none';
-            }).length;
-            if (visibleCount === 0) {
-                alert('검색결과 없음');
-                location.reload(); // 페이지 리로드
-            }
         }
     </script>
 </body>
