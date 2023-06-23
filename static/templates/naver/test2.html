@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>클릭시 위치 띄우기</title>
+    <meta charset="utf-8">
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>지도 예제</h1>
+    <div id="map"></div>
+
+    <script type="text/javascript"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
+    <script>
+        var mapOptions = {
+            center: new naver.maps.LatLng(37.5665, 126.9780), // 서울시청 좌표
+            zoom: 13
+        };
+        var map = new naver.maps.Map('map', mapOptions);
+
+        // 현재 위치 가져오기
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                var currentPosition = new naver.maps.LatLng(lat, lng);
+
+                // 현재 위치 마커 생성
+                var marker = new naver.maps.Marker({
+                    position: currentPosition,
+                    map: map
+                });
+
+                // 지도 중심 이동
+                map.setCenter(currentPosition);
+
+
+                var hos1 = {
+                    name: '성수 병원1',
+                    addr: '서울특별시 성동구 성수동2가 아차산로 92 에스타워 303호',
+                    latitude: 37.5422582, // 병원1 위치 위도
+                    longitude: 127.0445666 // 병원1 위치 경도
+                };
+
+
+                var hos2 = {
+                    name: '성수 병원2',
+                    addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
+                    latitude: 37.540540, // 병원1 위치 위도
+                    longitude: 127.051046 // 병원2 위치 경도
+                };
+
+                var hos3 = {
+                    name: '부산 병원',
+                    addr: '부산광역시 사상구 새벽로 226',
+                    latitude: 35.159987, // 병원 위치 위도
+                    longitude: 128.980434 // 병원 위치 경도
+                };
+
+                var HOME_PATH = window.HOME_PATH || '.';
+
+                var contentString = [
+                    '<div class="iw_inner">',
+                    '   <h3>서울특별시청</h3>',
+                    '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br />',
+                    '       <img src="'+ HOME_PATH +'/img/example/hi-seoul.jpg" width="55" height="55" alt="서울시청" class="thumb" /><br />',
+                    '       02-120 | 공공,사회기관 &gt; 특별,광역시청<br />',
+                    '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+                    '   </p>',
+                    '</div>'
+                ].join('');
+
+                var infowindow = new naver.maps.InfoWindow({
+                    content: contentString
+                });
+
+                naver.maps.Event.addListener(marker, "click", function(e) {
+                    if (infowindow.getMap()) {
+                        infowindow.close();
+                    } else {
+                        infowindow.open(map, marker);
+                    }
+                });
+
+                infowindow.open(map, marker);
+            });
+        } else {
+            alert("Geolocation을 지원하지 않는 브라우저입니다.");
+        }
+
+
+    </script>
+</body>
+
+</html>
