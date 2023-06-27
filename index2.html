@@ -240,6 +240,13 @@
 
                 var hospitals = [hos1, hos2, hos3]; // 병원 객체들을 배열에 저장
 
+                // 거리에 따라 병원 배열 정렬
+                hospitals.sort(function (a, b) {
+                    var distanceA = calculateDistance(lat, lng, a.latitude, a.longitude);
+                    var distanceB = calculateDistance(lat, lng, b.latitude, b.longitude);
+                    return distanceA - distanceB;
+                });
+
                 for (var i = 0; i < hospitals.length; i++) {
                     var hospital = hospitals[i];
 
@@ -274,6 +281,9 @@
 
                             infowindow.setContent(content); // 정보창 내용 설정
                             infowindow.open(map, marker); // 정보창 열기
+
+                            // 해당 병원 위치로 지도 중심 이동
+                            map.setCenter(marker.getPosition());
                         }
                     })(marker, hospital));
 
@@ -337,12 +347,7 @@
             alert('검색결과 없음');
             location.reload(); // 페이지 리로드
         }
-
     }
-
-
-
-
 </script>
 
 </html>
