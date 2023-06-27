@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map</title>
+    <title>Map-geo</title>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
 
@@ -38,7 +38,7 @@
     }
 
     .search-box {
-        flex: 1;
+        flex: 2;
     }
 
     .search {
@@ -50,14 +50,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;       
+        text-align: center;
     }
 
     #searchInput {
         width: 250px;
         height: 30px;
         margin-right: 5px;
-       
+
         border: none;
         border-bottom: 2px solid black;
     }
@@ -67,10 +67,10 @@
         height: 30px;
     }
 
-    .my-location{
+    .my-location {
         margin-right: 20px;
-        margin-left: 20px;
-        margin-top: 10px;
+        margin-left: 60px;
+        margin-top: 15px;
     }
 
     .content {
@@ -81,14 +81,14 @@
 
     .hos-info {
         background-color: whitesmoke;
-        margin-right: 20px;
-        margin-left: 20px;
-        margin-top: 10px;
+        margin-right: 35px;
+        margin-left: 50px;
+        margin-top: 15px;
     }
 
 
     #map {
-        flex: 2;
+        flex: 5;
         height: 600px;
     }
 
@@ -214,26 +214,54 @@
                 var hos1 = {
                     name: '성수 병원1',
                     addr: '서울특별시 성동구 성수동2가 아차산로 92 에스타워 303호',
-                    info: '성수 병원1 입니다.',
-                    latitude: 37.5422582, // 병원1 위치 위도
-                    longitude: 127.0445666 // 병원1 위치 경도
+                    info: '성수 병원1 입니다.'
                 };
 
                 var hos2 = {
                     name: '성수 병원2',
                     addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
-                    info: '성수 병원2 입니다.',
-                    latitude: 37.540540, // 병원1 위치 위도
-                    longitude: 127.051046 // 병원2 위치 경도
+                    info: '성수 병원2 입니다.'
                 };
 
                 var hos3 = {
                     name: '부산 병원',
                     addr: '부산광역시 사상구 새벽로 226',
-                    info: "부산 병원 입니다.",
-                    latitude: 35.159987, // 병원 위치 위도
-                    longitude: 128.980434 // 병원 위치 경도
+                    info: "부산 병원 입니다."
                 };
+
+                // geolocation으로 addr을 위도(latitude)와 경도(longitude) 값으로 변환
+                geolocation(hos1.addr, function (latitude, longitude) {
+                    hos1.latitude = latitude;
+                    hos1.longitude = longitude;
+
+                    // 병원1 정보 업데이트
+                    document.getElementById('hos1Latitude').textContent = hos1.latitude;
+                    document.getElementById('hos1Longitude').textContent = hos1.longitude;
+                    var distance1 = calculateDistance(lat, lng, hos1.latitude, hos1.longitude);
+                    document.getElementById('distance1').textContent = distance1;
+                });
+
+                geolocation(hos2.addr, function (latitude, longitude) {
+                    hos2.latitude = latitude;
+                    hos2.longitude = longitude;
+
+                    // 병원2 정보 업데이트
+                    document.getElementById('hos2Latitude').textContent = hos2.latitude;
+                    document.getElementById('hos2Longitude').textContent = hos2.longitude;
+                    var distance2 = calculateDistance(lat, lng, hos2.latitude, hos2.longitude);
+                    document.getElementById('distance2').textContent = distance2;
+                });
+
+                geolocation(hos3.addr, function (latitude, longitude) {
+                    hos3.latitude = latitude;
+                    hos3.longitude = longitude;
+
+                    // 병원3 정보 업데이트
+                    document.getElementById('hos3Latitude').textContent = hos3.latitude;
+                    document.getElementById('hos3Longitude').textContent = hos3.longitude;
+                    var distance3 = calculateDistance(lat, lng, hos3.latitude, hos3.longitude);
+                    document.getElementById('distance3').textContent = distance3;
+                });
 
                 document.getElementById('latitude').textContent = lat;
                 document.getElementById('longitude').textContent = lng;
@@ -291,8 +319,6 @@
                     var distance = calculateDistance(lat, lng, hospital.latitude, hospital.longitude);
 
                     document.getElementById('hos' + (i + 1) + 'Name').textContent = hospital.name;
-                    document.getElementById('hos' + (i + 1) + 'Latitude').textContent = hospital.latitude;
-                    document.getElementById('hos' + (i + 1) + 'Longitude').textContent = hospital.longitude;
                     document.getElementById('distance' + (i + 1)).textContent = distance;
                 }
 
@@ -302,7 +328,21 @@
         }
     }
 
+    // addr을 위도(latitude)와 경도(longitude) 값으로 변환하는 함수
+    function geolocation(addr, callback) {
+        // 실제로는 주소를 위도와 경도로 변환하는 코드를 작성해야 합니다.
+        // 여기에서는 예시로 addr 값을 직접 설정해주었습니다.
+        if (addr === '서울특별시 성동구 성수동2가 아차산로 92 에스타워 303호') {
+            callback(37.5422582, 127.0445666);
+        } else if (addr === '서울특별시 성동구 성수동2가 317-3 베델플레이스') {
+            callback(37.540540, 127.051046);
+        } else if (addr === '부산광역시 사상구 새벽로 226') {
+            callback(35.159987, 128.980434);
+        }
+    }
+
     initMap();
+
 
     function handleKeyPress(e) {
         if (e.keyCode === 13) {
