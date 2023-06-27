@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <script type="text/javascript"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
+
+</head>
+<style>
+    .header {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: white;
+        background-color: black;
+
+    }
+
+    .footer {
+        width: 100%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: white;
+        background-color: black;
+    }
+
+    .main {
+        display: flex;
+    }
+
+    .search-box {
+        flex: 1;
+    }
+
+    .search {
+        height: 150px;
+    }
+
+    .input-box {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;       
+    }
+
+    #searchInput {
+        width: 250px;
+        height: 30px;
+        margin-right: 5px;
+       
+        border: none;
+        border-bottom: 2px solid black;
+    }
+
+    .input-box button {
+        width: 50px;
+        height: 30px;
+    }
+
+    .my-location{
+        margin-right: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
+    .content {
+        background-color: #dbdbdb;
+        height: 450px;
+        overflow-y: auto;
+    }
+
+    .hos-info {
+        background-color: whitesmoke;
+        margin-right: 20px;
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
+
+    #map {
+        flex: 2;
+        height: 600px;
+    }
+
+    .hos-marker {
+        position: relative;
+        width: 32px;
+        height: 32px;
+    }
+
+    .hos-marker .icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 32px;
+        height: 32px;
+        background-color: green;
+        border-radius: 50%;
+        text-align: center;
+    }
+
+    .hos-marker .shd {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        margin-top: -5px;
+        margin-left: -5px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<body>
+    <header class="header">
+        <h1>header</h1>
+    </header>
+
+    <div class="main">
+        <div class="search-box">
+            <div class="search">
+                <div class="input-box">
+                    <input id="searchInput" type="text" onkeydown="handleKeyPress(event)" placeholder="주소를 검색하세요">
+                    <button onclick="search()">확인</button></p>
+                </div>
+                <div class="my-location">
+                    <p>현재 위치 위도: <span id="latitude"></span></p>
+                    <p>현재 위치 경도: <span id="longitude"></span></p>
+                </div>
+            </div>
+            <div class="content">
+                <div class="hos-info" id="hos1Info">
+                    <p>병원1 이름: <span id="hos1Name"></span></p>
+                    <p>병원1 위치 위도: <span id="hos1Latitude"></span></p>
+                    <p>병원1 위치 경도: <span id="hos1Longitude"></span></p>
+                    <p>현재 위치와 병원1 위치의 거리: <span id="distance1"></span> km</p>
+
+                </div>
+
+                <div class="hos-info" id="hos2Info">
+                    <p>병원2 이름: <span id="hos2Name"></span></p>
+                    <p>병원2 위치 위도: <span id="hos2Latitude"></span></p>
+                    <p>병원2 위치 경도: <span id="hos2Longitude"></span></p>
+                    <p>현재 위치와 병원2 위치의 거리: <span id="distance2"></span> km</p>
+
+                </div>
+
+
+                <div class="hos-info" id="hos3Info">
+                    <p>병원3 이름: <span id="hos3Name"></span></p>
+                    <p>병원3 위치 위도: <span id="hos3Latitude"></span></p>
+                    <p>병원3 위치 경도: <span id="hos3Longitude"></span></p>
+                    <p>현재 위치와 병원3 위치의 거리: <span id="distance3"></span> km</p>
+
+                </div>
+            </div>
+        </div>
+        <div class="map" id="map">
+            map
+        </div>
+    </div>
+    <footer class="footer">
+        <h3>footer</h3>
+    </footer>
+</body>
+
+<script>
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        var R = 6371; // 지구 반지름 (단위: km)
+        var dLat = (lat2 - lat1) * Math.PI / 180;
+        var dLon = (lon2 - lon1) * Math.PI / 180;
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var distance = R * c; // 거리 (단위: km)
+        return distance.toFixed(2); // 소수점 이하 2자리까지 반올림하여 반환
+    }
+
+    function initMap() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude; // 내 위치 위도
+                var lng = position.coords.longitude; // 내 위치 경도
+                var currentPosition = new naver.maps.LatLng(lat, lng);
+
+                var mapContainer = document.getElementById('map');
+                var mapOption = {
+                    center: new naver.maps.LatLng(lat, lng),
+                    level: 5
+                };
+                var map = new naver.maps.Map(mapContainer, mapOption);
+
+                // 현재 위치 마커 생성
+                var markerPosition = new naver.maps.LatLng(lat, lng);
+                var marker = new naver.maps.Marker({
+                    position: markerPosition,
+                });
+
+                marker.setMap(map);
+
+                var hos1 = {
+                    name: '성수 병원1',
+                    addr: '서울특별시 성동구 성수동2가 아차산로 92 에스타워 303호',
+                    info: '성수 병원1 입니다.',
+                    latitude: 37.5422582, // 병원1 위치 위도
+                    longitude: 127.0445666 // 병원1 위치 경도
+                };
+
+                var hos2 = {
+                    name: '성수 병원2',
+                    addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
+                    info: '성수 병원2 입니다.',
+                    latitude: 37.540540, // 병원1 위치 위도
+                    longitude: 127.051046 // 병원2 위치 경도
+                };
+
+                var hos3 = {
+                    name: '부산 병원',
+                    addr: '부산광역시 사상구 새벽로 226',
+                    info: "부산 병원 입니다.",
+                    latitude: 35.159987, // 병원 위치 위도
+                    longitude: 128.980434 // 병원 위치 경도
+                };
+
+                document.getElementById('latitude').textContent = lat;
+                document.getElementById('longitude').textContent = lng;
+
+                var hospitals = [hos1, hos2, hos3]; // 병원 객체들을 배열에 저장
+
+                for (var i = 0; i < hospitals.length; i++) {
+                    var hospital = hospitals[i];
+
+                    var markerPosition = new naver.maps.LatLng(hospital.latitude, hospital.longitude);
+                    var marker = new naver.maps.Marker({
+                        position: markerPosition,
+                        icon: {
+                            content: [
+                                '<div class="hos-marker">',
+                                '<div class="icon">',
+                                '<span class="shd"></span>',
+                                '</div>',
+                                '</div>'
+                            ].join(''),
+                            size: new naver.maps.Size(38, 58),
+                            anchor: new naver.maps.Point(19, 58),
+                        }
+                    });
+                    marker.setMap(map);
+
+                    var infowindow = new naver.maps.InfoWindow(); // 정보창 객체 생성
+
+                    // 클릭 이벤트 핸들러 등록
+                    naver.maps.Event.addListener(marker, 'click', (function (marker, hospital) {
+                        return function () {
+                            var content = [
+                                '<div>',
+                                '<p>이름: ' + hospital.name + '</p>',
+                                '<p>소개: ' + hospital.info + '</p>',
+                                '</div>'
+                            ].join('');
+
+                            infowindow.setContent(content); // 정보창 내용 설정
+                            infowindow.open(map, marker); // 정보창 열기
+                        }
+                    })(marker, hospital));
+
+
+                    var distance = calculateDistance(lat, lng, hospital.latitude, hospital.longitude);
+
+                    document.getElementById('hos' + (i + 1) + 'Name').textContent = hospital.name;
+                    document.getElementById('hos' + (i + 1) + 'Latitude').textContent = hospital.latitude;
+                    document.getElementById('hos' + (i + 1) + 'Longitude').textContent = hospital.longitude;
+                    document.getElementById('distance' + (i + 1)).textContent = distance;
+                }
+
+            });
+        } else {
+            alert("Geolocation을 지원하지 않는 브라우저입니다.");
+        }
+    }
+
+    initMap();
+
+    function handleKeyPress(e) {
+        if (e.keyCode === 13) {
+            search();
+        }
+    }
+
+
+    function search() {
+        var keyword = document.getElementById('searchInput').value;
+        console.log("keyword : " + keyword);
+
+        var hos1Info = document.getElementById('hos1Info');
+        var hos2Info = document.getElementById('hos2Info');
+        var hos3Info = document.getElementById('hos3Info');
+
+        // 검색 결과에 따라 값을 업데이트하고 보여주거나 감추는 로직 추가
+        if (keyword === '') {
+            hos1Info.style.display = 'block';
+            hos2Info.style.display = 'block';
+            hos3Info.style.display = 'block';
+        } else {
+            if (document.getElementById('hos1Name').textContent.includes(keyword)) {
+                hos1Info.style.display = 'block';
+            } else {
+                hos1Info.style.display = 'none';
+            }
+            if (document.getElementById('hos2Name').textContent.includes(keyword)) {
+                hos2Info.style.display = 'block';
+            } else {
+                hos2Info.style.display = 'none';
+            }
+            if (document.getElementById('hos3Name').textContent.includes(keyword)) {
+                hos3Info.style.display = 'block';
+            } else {
+                hos3Info.style.display = 'none';
+            }
+        }
+
+        var visibleCount = [hos1Info, hos2Info, hos3Info].filter(info => info.style.display !== 'none').length;
+        if (visibleCount === 0) {
+            alert('검색결과 없음');
+            location.reload(); // 페이지 리로드
+        }
+
+    }
+
+
+
+
+</script>
+
+</html>
