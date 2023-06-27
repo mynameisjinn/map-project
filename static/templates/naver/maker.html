@@ -4,43 +4,60 @@
 <head>
     <title>marker</title>
     <meta charset="utf-8">
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <style>
+        #container {
+            display: flex;
+            position: relative;
+            z-index: 1;
 
-    #container {
-      display: flex;
-      position: relative;
-      z-index: 1;
 
-  
-    }
+        }
 
-    .search-input{
-        position: relative;
-        background-color: #dbdbdb;
-    }
+        .search-input {
+            position: relative;
+            background-color: #dbdbdb;
+        }
 
-    .search-box {
-      width: 400px;
-      background-color:white;
-      position: absolute;
-    
-    }
+        .search-box {
+            width: 400px;
+            background-color: white;
+            position: absolute;
 
-    #content {
-        width: 400px;
-        background-color: #b9b5b5; 
-        overflow-y: auto; /* 스크롤 추가 */
-    }
+        }
 
-    
-    #map {
-      flex: 1;
-      height: 500px;
-      position: relative;
-      z-index: 0;
-    }
+        #content {
+            width: 400px;
+            background-color: #b9b5b5;
+            overflow-y: auto;
+            /* 스크롤 추가 */
+        }
 
+
+        #map {
+            flex: 1;
+            height: 500px;
+            position: relative;
+            z-index: 0;
+        }
+
+        .cs_mapbridge .map_group .map_marker{
+            z-index: 6;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+
+        .cs_mapbridge .crs .map_marker.num1_big .ico {
+            background-color: -160px -215px;
+            -webkit-background-size: 400px 450px;
+            -webkit-transform-origin: 19px 54px;
+        }
+
+        .cs_mapbridge .crs .map_marker[class*=_big] .ico {
+            width: 38px;
+            height: 58px;;
+        }
 
         .hos-marker {
             position: relative;
@@ -75,7 +92,7 @@
 
 <body>
     <h1>지도 예제</h1>
-    
+
 
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
@@ -113,8 +130,8 @@
                     var map = new naver.maps.Map(mapContainer, mapOption);
 
                     // 기존의 #content 크기 유지 및 스크롤 생성
-            var content = document.getElementById('content');
-            content.style.height = mapContainer.offsetHeight + 'px';
+                    var content = document.getElementById('content');
+                    content.style.height = mapContainer.offsetHeight + 'px';
 
 
 
@@ -158,21 +175,50 @@
                     for (var i = 0; i < hospitals.length; i++) {
                         var hospital = hospitals[i];
 
+                        // var markerPosition = new naver.maps.LatLng(hospital.latitude, hospital.longitude);
+                        // var marker = new naver.maps.Marker({
+                        //     position: markerPosition,
+                        //     icon: {
+                        //         content: [
+                        //             '<div class="hos-marker">',
+                        //             '<div class="icon">',
+                        //             '<span class="shd"></span>',
+                        //             '</div>',
+                        //             '</div>'
+                        //         ].join(''),
+                        //         size: new naver.maps.Size(38, 58),
+                        //         anchor: new naver.maps.Point(19, 58),
+                        //     }
+                        // });
+
                         var markerPosition = new naver.maps.LatLng(hospital.latitude, hospital.longitude);
-                        var marker = new naver.maps.Marker({
+                        var greenMarker = new naver.maps.Marker({
                             position: markerPosition,
+                            map: map,
+                            title: 'Green',
                             icon: {
-                            content: [
-                                '<div class="hos-marker">',
-                                '<div class="icon">',
-                                '<span class="shd"></span>',
-                                '</div>',
-                                '</div>'
-                            ].join(''),
-                            size: new naver.maps.Size(38, 58),
-                            anchor: new naver.maps.Point(19, 58),
-                        }
+                                content: [
+                                    '<div class="cs_mapbridge" style="cursor: pointer;">',
+                                    '<div class="map_group _map_group crs">',
+                                    '<div class="map_marker _marker num1 num1_big"> ',
+                                    '<span class="ico _icon"></span>',
+                                    '<span class="shd"></span>',
+                                    '</div>',
+                                    '</div>',
+                                    '</div>'
+                                ].join(''),
+                                size: new naver.maps.Size(38, 58),
+                                anchor: new naver.maps.Point(19, 58),
+                             
+
+                            }
                         });
+
+                        console.log(greenMarker);
+
+
+
+
                         marker.setMap(map);
 
                         var infowindow = new naver.maps.InfoWindow(); // 정보창 객체 생성
@@ -180,22 +226,22 @@
                         // 클릭 이벤트 핸들러 등록
                         naver.maps.Event.addListener(marker, 'click', (function (marker, hospital) {
                             return function () {
-                        var content = [
-                            '<div>',
-                            '<p>이름: ' + hospital.name + '</p>',
-                            '<p>소개: ' + hospital.info + '</p>',
-                            '</div>'
-                        ].join('');
+                                var content = [
+                                    '<div>',
+                                    '<p>이름: ' + hospital.name + '</p>',
+                                    '<p>소개: ' + hospital.info + '</p>',
+                                    '</div>'
+                                ].join('');
 
-                        infowindow.setContent(content); // 정보창 내용 설정
-                        infowindow.open(map, marker); // 정보창 열기
+                                infowindow.setContent(content); // 정보창 내용 설정
+                                infowindow.open(map, marker); // 정보창 열기
 
-                    }
-                })(marker, hospital));
+                            }
+                        })(marker, hospital));
 
-                
 
-                        
+
+
                         var distance = calculateDistance(lat, lng, hospital.latitude, hospital.longitude);
 
                         document.getElementById('hos' + (i + 1) + 'Name').textContent = hospital.name;
@@ -255,93 +301,93 @@
             }
         }
     </script>
-<div id="container">
-    <div class="search-box">
-        <div class="search-input">
-            <input id="searchInput" type="text" onkeydown="handleKeyPress(event)" placeholder="주소를 검색하세요">
-            <button clsss="search-button" onclick="search()">확인</button></p>
-        </div>
-    
-        <div>
-            <p>현재 위치 위도: <span id="latitude"></span></p>
-            <p>현재 위치 경도: <span id="longitude"></span></p>
-            <p>///</p>
-        </div>
-    
-        <div id="content">
-    
-            <div class="hos-info" id="hos1Info">
-                <p>병원1 이름: <span id="hos1Name"></span></p>
-                <p>병원1 위치 위도: <span id="hos1Latitude"></span></p>
-                <p>병원1 위치 경도: <span id="hos1Longitude"></span></p>
-                <p>현재 위치와 병원1 위치의 거리: <span id="distance1"></span> km</p>
+    <div id="container">
+        <div class="search-box">
+            <div class="search-input">
+                <input id="searchInput" type="text" onkeydown="handleKeyPress(event)" placeholder="주소를 검색하세요">
+                <button clsss="search-button" onclick="search()">확인</button></p>
+            </div>
+
+            <div>
+                <p>현재 위치 위도: <span id="latitude"></span></p>
+                <p>현재 위치 경도: <span id="longitude"></span></p>
                 <p>///</p>
             </div>
-    
-            <div class="hos-info" id="hos2Info">
-                <p>병원2 이름: <span id="hos2Name"></span></p>
-                <p>병원2 위치 위도: <span id="hos2Latitude"></span></p>
-                <p>병원2 위치 경도: <span id="hos2Longitude"></span></p>
-                <p>현재 위치와 병원2 위치의 거리: <span id="distance2"></span> km</p>
-                <p>/// </p>
-            </div>
-    
-    
-            <div class="hos-info" id="hos3Info">
-                <p>병원3 이름: <span id="hos3Name"></span></p>
-                <p>병원3 위치 위도: <span id="hos3Latitude"></span></p>
-                <p>병원3 위치 경도: <span id="hos3Longitude"></span></p>
-                <p>현재 위치와 병원3 위치의 거리: <span id="distance3"></span> km</p>
-                <p>///</p>
+
+            <div id="content">
+
+                <div class="hos-info" id="hos1Info">
+                    <p>병원1 이름: <span id="hos1Name"></span></p>
+                    <p>병원1 위치 위도: <span id="hos1Latitude"></span></p>
+                    <p>병원1 위치 경도: <span id="hos1Longitude"></span></p>
+                    <p>현재 위치와 병원1 위치의 거리: <span id="distance1"></span> km</p>
+                    <p>///</p>
+                </div>
+
+                <div class="hos-info" id="hos2Info">
+                    <p>병원2 이름: <span id="hos2Name"></span></p>
+                    <p>병원2 위치 위도: <span id="hos2Latitude"></span></p>
+                    <p>병원2 위치 경도: <span id="hos2Longitude"></span></p>
+                    <p>현재 위치와 병원2 위치의 거리: <span id="distance2"></span> km</p>
+                    <p>/// </p>
+                </div>
+
+
+                <div class="hos-info" id="hos3Info">
+                    <p>병원3 이름: <span id="hos3Name"></span></p>
+                    <p>병원3 위치 위도: <span id="hos3Latitude"></span></p>
+                    <p>병원3 위치 경도: <span id="hos3Longitude"></span></p>
+                    <p>현재 위치와 병원3 위치의 거리: <span id="distance3"></span> km</p>
+                    <p>///</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div id="map"></div>
+    <div id="map"></div>
 </body>
 
-    <script>
-        function search() {
-            var keyword = document.getElementById('searchInput').value;
-            console.log("keyword : " + keyword);
-    
-            var hos1Info = document.getElementById('hos1Info');
-            var hos2Info = document.getElementById('hos2Info');
-            var hos3Info = document.getElementById('hos3Info');
-    
-            // 검색 결과에 따라 값을 업데이트하고 보여주거나 감추는 로직 추가
-            if (keyword === '') {
+<script>
+    function search() {
+        var keyword = document.getElementById('searchInput').value;
+        console.log("keyword : " + keyword);
+
+        var hos1Info = document.getElementById('hos1Info');
+        var hos2Info = document.getElementById('hos2Info');
+        var hos3Info = document.getElementById('hos3Info');
+
+        // 검색 결과에 따라 값을 업데이트하고 보여주거나 감추는 로직 추가
+        if (keyword === '') {
+            hos1Info.style.display = 'block';
+            hos2Info.style.display = 'block';
+            hos3Info.style.display = 'block';
+        } else {
+            if (document.getElementById('hos1Name').textContent.includes(keyword)) {
                 hos1Info.style.display = 'block';
+
+                $('.hos-marker .icon').css('background', 'blue');
+
+            } else {
+                hos1Info.style.display = 'none';
+            }
+            if (document.getElementById('hos2Name').textContent.includes(keyword)) {
                 hos2Info.style.display = 'block';
+            } else {
+                hos2Info.style.display = 'none';
+            }
+            if (document.getElementById('hos3Name').textContent.includes(keyword)) {
                 hos3Info.style.display = 'block';
             } else {
-                if (document.getElementById('hos1Name').textContent.includes(keyword)) {
-                    hos1Info.style.display = 'block';
-                    
-                        $('.hos-marker .icon').css('background','blue');
-                    
-                } else {
-                    hos1Info.style.display = 'none';
-                }
-                if (document.getElementById('hos2Name').textContent.includes(keyword)) {
-                    hos2Info.style.display = 'block';
-                } else {
-                    hos2Info.style.display = 'none';
-                }
-                if (document.getElementById('hos3Name').textContent.includes(keyword)) {
-                    hos3Info.style.display = 'block';
-                } else {
-                    hos3Info.style.display = 'none';
-                }
+                hos3Info.style.display = 'none';
             }
-    
-            var visibleCount = [hos1Info, hos2Info, hos3Info].filter(info => info.style.display !== 'none').length;
-            if (visibleCount === 0) {
-                alert('검색결과 없음');
-                location.reload(); // 페이지 리로드
-            }
-
         }
-    </script>
+
+        var visibleCount = [hos1Info, hos2Info, hos3Info].filter(info => info.style.display !== 'none').length;
+        if (visibleCount === 0) {
+            alert('검색결과 없음');
+            location.reload(); // 페이지 리로드
+        }
+
+    }
+</script>
 
 </html>
