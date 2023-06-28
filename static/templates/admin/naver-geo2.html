@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>네이버 맵 지오코딩 API 예제2</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cors-anywhere.herokuapp.com/https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff&submodules=geocoder"></script>
+</head>
+<body>
+  <h1>네이버 맵 지오코딩 API 예제2</h1>
+  <input type="text" id="addressInput" placeholder="주소를 입력하세요">
+  <button onclick="geocode()">지오코딩</button>
+  <div id="result"></div>
+
+  <script>
+    function geocode() {
+      var address = $('#addressInput').val();
+      var url = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=' + encodeURIComponent(address);
+    // var url = 'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=' + longitude + ',' + latitude + '&output=json&orders=addr';
+
+      $.ajax({
+        url: url,
+        headers: {
+          'X-NCP-APIGW-API-KEY-ID': '1d91fzypff',
+          'X-NCP-APIGW-API-KEY': 'yVFeN5A4FsVpyiJhH5ICQFq9ifsxHWLTA1OCrcyN'
+        },
+        method: 'GET',
+        success: function(data) {
+          if (data.status === 'OK' && data.addresses.length > 0) {
+            var result = data.addresses[0];
+            var html = '<strong>주소:</strong> ' + result.jibunAddress + '<br>';
+            html += '<strong>위도:</strong> ' + result.x + '<br>';
+            html += '<strong>경도:</strong> ' + result.y;
+
+            $('#result').html(html);
+          } else {
+            var errorMessage = '검색 결과가 없습니다.';
+            if (data.errorMessage) {
+              errorMessage = data.errorMessage;
+            }
+            $('#result').html(errorMessage);
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          $('#result').html('오류가 발생했습니다.');
+          console.error(jqXHR, textStatus, errorThrown);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

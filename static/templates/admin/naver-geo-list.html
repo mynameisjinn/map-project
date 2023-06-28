@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>지오코딩 리스트</title>
+  <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff&submodules=geocoder"></script>
+</head>
+<body>
+  <h1>지오코딩 리스트</h1>
+  <input type="text" id="addressInput" placeholder="주소를 입력하세요">
+  <button onclick="geocode()">지오코딩</button>
+  <div id="result"></div>
+
+  <script>
+    function geocode() {
+      var address = document.getElementById('addressInput').value;
+      naver.maps.Service.geocode({
+        query: address
+      }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+          document.getElementById('result').innerHTML = '검색 결과가 없습니다.';
+          return;
+        }
+
+        var result = response.v2.addresses[0];
+        var addressElements = result.addressElements;
+        
+        var html = '<ul>';
+        for (var i = 0; i < addressElements.length; i++) {
+          var element = addressElements[i];
+          if (element.types.includes('BUILDING_NAME')) {
+            html += '<li onclick="showAddressDetails(' + i + ')"><strong>BUILDING_NAME:</strong> ' + (element.longName || element.shortName) + '</li>';
+          }
+        }
+        html += '</ul>';
+        
+        document.getElementById('result').innerHTML = html;
+     
+        
+        
+        // 실제로 API를 호출하여 결과를 가져오는 부분
+        var result = response.result;
+        
+        var latitude = result.items[0].point.y;
+        var longitude = result.items[0].point.x;
+
+        // API 호출 예시 (AJAX를 사용한 비동기 호출)
+        var xhr = new XMLHttpRequest();
+        var url = 'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=' + longitude + ',' + latitude + '&output=json&orders=addr';
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('X-NCP-APIGW-API-KEY-ID', '1d91fzypff');
+        xhr.setRequestHeader('X-NCP-APIGW-API-KEY', 'yVFeN5A4FsVpyiJhH5ICQFq9ifsxHWLTA1OCrcyN');
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var responseJSON = JSON.parse(xhr.responseText);
+            var addressResult = responseJSON.results[0].region;
+
+            var addressHtml = '<strong>시도:</strong> ' + addressResult.area1.name + '<br>';
+            addressHtml += '<strong>시군구:</strong> ' + addressResult.area2.name + '<br>';
+            addressHtml += '<strong>읍면동:</strong> ' + addressResult.area3.name;
+
+            document.getElementById('result').innerHTML += '<br><br>' + addressHtml;
+          }
+        };
+        xhr.send();
+      });
+    }
+
+    function showAddressDetails(index) {
+      var result = response.v2.addresses[0];
+      var addressElements = result.addressElements;
+      var selectedElement = addressElements[index];
+      
+      var html = '<strong>지번 주소:</strong> ' + result.jibunAddress + '<br>';
+      html += '<strong>도로명:</strong> ' + result.roadAddress + '<br>';
+      html += '<strong>위도:</strong> ' + result.y + '<br>';
+      html += '<strong>경도:</strong> ' + result.x;
+      
+      document.getElementById('result').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
