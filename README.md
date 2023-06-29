@@ -30,10 +30,15 @@ naver/main-page.html
 
 
 주요 페이지
-admin/admin-page.html
 
+admin/naver-geo2.html : 주소 변환
 
-※ admin-page.html 에서 주소 검색시, 올바른 지번주소 또는 도로주소를 사용하여야 한다.
+admin/search-api.html : 주소 검색
+
+※ naver-geo2.html 에서 주소 검색시, 올바른 지번주소 또는 도로주소를 사용하여야 한다.
+때문에 주소 검색 페이지를 따로 생성 해두었음.
+(주소 검색페이지에서는 키워드로 검색이 가능하고,
+정확한 주소를 반환해준다.)
 
 (ex) 서울특별시 성동구 성수동2가 아차산로 92 에스타워 
 -> 존재하는 주소이긴 하지만, 더 명확한 주소로 검색하여야 찾을 수 있음 
@@ -42,3 +47,14 @@ admin/admin-page.html
         도로명: 서울특별시 성동구 아차산로 92 S TOWER
 
         둘 중 하나로 사용하여야 위도,경도 변환 가능 !!
+
+
+
+
+※ Geocoding API 사용 관련
+
+클라우드의 Geocoding 은 호출에 성공(변환성공)한 경우만 사용량으로 측정됨
+
+※ 검색 API
+
+Naver deve
