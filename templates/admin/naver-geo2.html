@@ -23,8 +23,8 @@
         if (data.status === 'OK' && data.addresses.length > 0) {
           var result = data.addresses[0];
           var html = '<strong>주소:</strong> ' + result.jibunAddress + '<br>';
-          html += '<strong>위도:</strong> ' + result.x + '<br>';
-          html += '<strong>경도:</strong> ' + result.y;
+          html += '<strong>위도:</strong> ' + result.y + '<br>';
+          html += '<strong>경도:</strong> ' + result.x;
 
           $('#result').html(html);
         } else {
