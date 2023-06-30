@@ -121,8 +121,8 @@
         <div class="search-box">
             <div class="search">
                 <div class="input-box">
-                    <input id="searchInput" type="text" onkeydown="handleKeyPress(event)" placeholder="주소를 검색하세요">
-                    <button onclick="search()">확인</button></p>
+                    <input id="searchInput" type="text" placeholder="주소를 검색하세요">
+                    <button id="okBtn">확인</button></p>
                 </div>
                 <div class="my-location" style="display: none;">
                     <p>현재 위치 위도: <span id="latitude"></span></p>
@@ -348,6 +348,7 @@
                         }
                     })(marker, hospital));
 
+
                     var distance = calculateDistance(lat, lng, hospital.latitude, hospital.longitude);
 
                     document.getElementById('hos' + (i + 1) + 'Name').textContent = hospital.name;
@@ -356,147 +357,84 @@
                     document.getElementById('distance' + (i + 1)).textContent = distance;
                 }
 
-                // 마커 클릭시 해당 마커만 보이는 이벤트
-                document.getElementById('general').addEventListener('click', showGeneral);
-                document.getElementById('pharmacy').addEventListener('click', showPharmacy);
-                document.getElementById('injection').addEventListener('click', showInjecteion);
-                document.getElementById('none').addEventListener('click', showNone);
-
-                
                 var isVisible = false; // 일반 병원 마커의 가시성 상태를 저장하는 변수
 
-                function showGeneral() {
+                function toggleMarkers(keyword) {
                     isVisible = !isVisible; // 토글 변수 변경
 
-                    if (isVisible) {
-                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var marker = markers[i];
+                    for (var i = 0; i < hospitals.length; i++) {
+                        var hospital = hospitals[i];
+                        var marker = markers[i];
+
+                        if (isVisible || hospital.keyword === keyword) {
                             marker.setVisible(true);
-                        }
-                    } else {
-                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var hospital = hospitals[i];
-                            var marker = markers[i];
-                            if (hospital.keyword !== 'general') {
-                                marker.setVisible(false);
-                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
-                            }
+                        } else {
+                            marker.setVisible(false);
+                            infowindow.close();
                         }
                     }
                 }
 
-                function showPharmacy() {
-                    isVisible = !isVisible; // 토글 변수 변경
+                document.getElementById('general').addEventListener('click', function () {
+                    toggleMarkers('general');
+                });
 
-                    if (isVisible) {
-                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var marker = markers[i];
-                            marker.setVisible(true);
-                        }
-                    } else {
-                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var hospital = hospitals[i];
-                            var marker = markers[i];
-                            if (hospital.keyword !== 'pharmacy') {
-                                marker.setVisible(false);
-                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
-                            }
-                        }
+                document.getElementById('pharmacy').addEventListener('click', function () {
+                    toggleMarkers('pharmacy');
+                });
+
+                document.getElementById('injection').addEventListener('click', function () {
+                    toggleMarkers('injection');
+                });
+
+                document.getElementById('none').addEventListener('click', function () {
+                    toggleMarkers('none');
+                });
+
+
+                // 엔터키로 검색
+                document.getElementById('searchInput').addEventListener('keydown', handleKeyPress);
+                function handleKeyPress(event) {
+                    if (event.key === 'Enter') {
+                        search();
                     }
                 }
 
-                function showInjecteion() {
-                    isVisible = !isVisible; // 토글 변수 변경
+                // 검색 결과에 해당하는 정보만 노출
+                document.getElementById('okBtn').addEventListener('click', search);
+                function search() {
+                    var keyword = document.getElementById('searchInput').value;
+                    var hospitals = [];
 
-                    if (isVisible) {
-                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var marker = markers[i];
-                            marker.setVisible(true);
-                        }
-                    } else {
-                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var hospital = hospitals[i];
-                            var marker = markers[i];
-                            if (hospital.keyword !== 'injection') {
-                                marker.setVisible(false);
-                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
-                            }
-                        }
+                    for (var i = 1; i <= 5; i++) {
+                        var infoElement = document.getElementById('hos' + i + 'Info');
+                        var nameElement = document.getElementById('hos' + i + 'Name');
+
+                        hospitals.push({
+                            info: infoElement,
+                            name: nameElement.textContent
+                        });
+                    }
+
+                    hospitals.forEach(function (hospital) {
+                        hospital.info.style.display = (keyword === '' || hospital.name.includes(keyword)) ? 'block' : 'none';
+                    });
+
+                    var visibleCount = hospitals.filter(function (hospital) {
+                        return hospital.info.style.display !== 'none';
+                    }).length;
+
+                    if (visibleCount === 0) {
+                        alert('검색결과 없음');
+                        location.reload();
                     }
                 }
-
-                function showNone() {
-                    isVisible = !isVisible; // 토글 변수 변경
-
-                    if (isVisible) {
-                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var marker = markers[i];
-                            marker.setVisible(true);
-                        }
-                    } else {
-                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
-                        for (var i = 0; i < hospitals.length; i++) {
-                            var hospital = hospitals[i];
-                            var marker = markers[i];
-                            if (hospital.keyword !== 'none') {
-                                marker.setVisible(false);
-                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
-                            }
-                        }
-                    }
-                } 
             });
         } else {
             alert("Geolocation을 지원하지 않는 브라우저입니다.");
         }
     }
-
-
     initMap();
-
-    function handleKeyPress(e) {
-        if (e.keyCode === 13) {
-            search();
-        }
-    }
-
-
-    // 검색 결과에 해당하는 정보만 노출
-    function search() {
-        var keyword = document.getElementById('searchInput').value;
-        var hospitals = [];
-
-        for (var i = 1; i <= 5; i++) {
-            var infoElement = document.getElementById('hos' + i + 'Info');
-            var nameElement = document.getElementById('hos' + i + 'Name');
-
-            hospitals.push({
-                info: infoElement,
-                name: nameElement.textContent
-            });
-        }
-
-        hospitals.forEach(function (hospital) {
-            hospital.info.style.display = (keyword === '' || hospital.name.includes(keyword)) ? 'block' : 'none';
-        });
-
-        var visibleCount = hospitals.filter(function (hospital) {
-            return hospital.info.style.display !== 'none';
-        }).length;
-
-        if (visibleCount === 0) {
-            alert('검색결과 없음');
-            location.reload();
-        }
-    }
-
 </script>
 
 </html>
