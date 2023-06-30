@@ -82,6 +82,7 @@
         text-align: center;
 
         margin-top: 20px;
+        background-color: #dbdbdb;
     }
 
     .keyword {
@@ -131,15 +132,15 @@
                         <img src="/static/image/medical-vector-free-icon-set-40.png"
                             style="width: 40px; height: 40px;" />
                     </div>
-                    <div class="keyword" id="general">
+                    <div class="keyword" id="pharmacy">
                         <img src="/static/image/medical-vector-free-icon-set-27.png"
                             style="width: 40px; height: 40px;" />
                     </div>
-                    <div class="keyword" id="general">
+                    <div class="keyword" id="injection">
                         <img src="/static/image/medical-vector-free-icon-set-39.png"
                             style="width: 40px; height: 40px;" />
                     </div>
-                    <div class="keyword" id="injection">
+                    <div class="keyword" id="none">
                         <img src="/static/image/medical-vector-free-icon-set-20.png"
                             style="width: 40px; height: 40px;" />
                     </div>
@@ -237,7 +238,7 @@
                     name: '성수 병원1',
                     addr: '서울특별시 성동구 성수동2가 314-5 S TOWER, 303호',
                     info: '성수 병원1 입니다.',
-                    keyword: '일반',
+                    keyword: 'general',
                     latitude: 37.5448692, // 병원1 위치 위도
                     longitude: 127.0542999 // 병원1 위치 경도
                 };
@@ -246,7 +247,7 @@
                     name: '성수 병원2',
                     addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
                     info: '성수 병원2 입니다.',
-                    keyword: '약국',
+                    keyword: 'pharmacy',
                     latitude: 37.5439172, // 병원1 위치 위도
                     longitude: 127.0572634 // 병원2 위치 경도
                 };
@@ -255,7 +256,7 @@
                     name: '부산 병원',
                     addr: '부산광역시 사상구 새벽로 226',
                     info: "부산 병원 입니다.",
-                    keyword: "주사",
+                    keyword: "injection",
                     latitude: 35.154907, // 병원 위치 위도
                     longitude: 129.008523 // 병원 위치 경도
                 };
@@ -264,6 +265,7 @@
                     name: '마디로한의원 뚝섬역',
                     addr: '서울 성동구 성수일로 77 서울숲IT밸리 105-1호',
                     info: "서울숲 IT벨리, 성수동 뚝섬역 4번출구 도보3분거리에 위치합니다.",
+                    keyword: "none",
                     latitude: 37.5474332,// 병원 위치 위도
                     longitude: 127.0503511 // 병원 위치 경도
                 };
@@ -272,6 +274,7 @@
                     name: '연세웰치과의원',
                     addr: '서울특별시 성동구 성수동2가 289-321 대한진공빌딩 4층',
                     info: "성수역 2번출구 근처에 위치한 치과입니다.",
+                    keyword: "none",
                     latitude: 37.5455540,// 병원 위치 위도
                     longitude: 127.0571619 // 병원 위치 경도
                 };
@@ -295,11 +298,11 @@
                     var iconUrl = ''; // 아이콘 경로를 저장할 변수
 
                     // 키워드에 따라 아이콘 경로 설정
-                    if (hospital.keyword === '일반') {
+                    if (hospital.keyword === 'general') {
                         iconUrl = "/static/image/medical-vector-free-icon-set-40.png"; // '일반' 키워드에 해당하는 아이콘 경로
-                    } else if (hospital.keyword === '약국') {
+                    } else if (hospital.keyword === 'pharmacy') {
                         iconUrl = '/static/image/medical-vector-free-icon-set-27.png'; // '약국' 키워드에 해당하는 아이콘 경로
-                    } else if (hospital.keyword === '주사') {
+                    } else if (hospital.keyword === 'injection') {
                         iconUrl = '/static/image/medical-vector-free-icon-set-39.png'; // '주사' 키워드에 해당하는 아이콘 경로
                     } else {
                         iconUrl = '/static/image/medical-vector-free-icon-set-20.png'; // 키워드에 해당하는 아이콘 경로가 없는 경우 기본 아이콘 경로
@@ -364,6 +367,7 @@
     }
 
 
+    // 검색 결과에 해당하는 정보만 노출
     function search() {
         var keyword = document.getElementById('searchInput').value;
         var hospitals = [];
