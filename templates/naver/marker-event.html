@@ -213,208 +213,250 @@
         return distance.toFixed(2); // 소수점 이하 2자리까지 반올림하여 반환
     }
     function initMap() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var lat = position.coords.latitude; // 내 위치 위도
-            var lng = position.coords.longitude; // 내 위치 경도
-            var currentPosition = new naver.maps.LatLng(lat, lng);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude; // 내 위치 위도
+                var lng = position.coords.longitude; // 내 위치 경도
+                var currentPosition = new naver.maps.LatLng(lat, lng);
 
-            var mapContainer = document.getElementById('map');
-            var mapOption = {
-                center: new naver.maps.LatLng(lat, lng),
-                level: 5
-            };
-            var map = new naver.maps.Map(mapContainer, mapOption);
+                var mapContainer = document.getElementById('map');
+                var mapOption = {
+                    center: new naver.maps.LatLng(lat, lng),
+                    level: 5
+                };
+                var map = new naver.maps.Map(mapContainer, mapOption);
 
-            // 현재 위치 마커 생성
-            var markerPosition = new naver.maps.LatLng(lat, lng);
-            var marker = new naver.maps.Marker({
-                position: markerPosition,
-            });
-
-            marker.setMap(map);
-
-            var hos1 = {
-                name: '성수 병원1',
-                addr: '서울특별시 성동구 성수동2가 314-5 S TOWER, 303호',
-                info: '성수 병원1 입니다.',
-                keyword: 'general',
-                latitude: 37.5448692, // 병원1 위치 위도
-                longitude: 127.0542999 // 병원1 위치 경도
-            };
-
-            var hos2 = {
-                name: '성수 병원2',
-                addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
-                info: '성수 병원2 입니다.',
-                keyword: 'pharmacy',
-                latitude: 37.5439172, // 병원1 위치 위도
-                longitude: 127.0572634 // 병원2 위치 경도
-            };
-
-            var hos3 = {
-                name: '부산 병원',
-                addr: '부산광역시 사상구 새벽로 226',
-                info: "부산 병원 입니다.",
-                keyword: "injection",
-                latitude: 35.154907, // 병원 위치 위도
-                longitude: 129.008523 // 병원 위치 경도
-            };
-
-            var hos4 = {
-                name: '마디로한의원 뚝섬역',
-                addr: '서울 성동구 성수일로 77 서울숲IT밸리 105-1호',
-                info: "서울숲 IT벨리, 성수동 뚝섬역 4번출구 도보3분거리에 위치합니다.",
-                keyword: "none",
-                latitude: 37.5474332,// 병원 위치 위도
-                longitude: 127.0503511 // 병원 위치 경도
-            };
-
-            var hos5 = {
-                name: '연세웰치과의원',
-                addr: '서울특별시 성동구 성수동2가 289-321 대한진공빌딩 4층',
-                info: "성수역 2번출구 근처에 위치한 치과입니다.",
-                keyword: "none",
-                latitude: 37.5455540,// 병원 위치 위도
-                longitude: 127.0571619 // 병원 위치 경도
-            };
-
-
-            document.getElementById('latitude').textContent = lat;
-            document.getElementById('longitude').textContent = lng;
-
-            var hospitals = [hos1, hos2, hos3, hos4, hos5]; // 병원 객체들을 배열에 저장
-            var markers = [];
-
-            // 거리에 따라 병원 배열 정렬
-            hospitals.sort(function (a, b) {
-                var distanceA = calculateDistance(lat, lng, a.latitude, a.longitude);
-                var distanceB = calculateDistance(lat, lng, b.latitude, b.longitude);
-                return distanceA - distanceB;
-            });
-
-            for (var i = 0; i < hospitals.length; i++) {
-                var hospital = hospitals[i];
-                var markerPosition = new naver.maps.LatLng(hospital.latitude, hospital.longitude);
-                var iconUrl = ''; // 아이콘 경로를 저장할 변수
-
-                // 키워드에 따라 아이콘 경로 설정
-                if (hospital.keyword === 'general') {
-                    iconUrl = "/static/image/medical-vector-free-icon-set-40.png"; // '일반' 키워드에 해당하는 아이콘 경로
-                } else if (hospital.keyword === 'pharmacy') {
-                    iconUrl = '/static/image/medical-vector-free-icon-set-27.png'; // '약국' 키워드에 해당하는 아이콘 경로
-                } else if (hospital.keyword === 'injection') {
-                    iconUrl = '/static/image/medical-vector-free-icon-set-39.png'; // '주사' 키워드에 해당하는 아이콘 경로
-                } else {
-                    iconUrl = '/static/image/medical-vector-free-icon-set-20.png'; // 키워드에 해당하는 아이콘 경로가 없는 경우 기본 아이콘 경로
-                }
-
+                // 현재 위치 마커 생성
+                var markerPosition = new naver.maps.LatLng(lat, lng);
                 var marker = new naver.maps.Marker({
                     position: markerPosition,
-                    icon: {
-                        content: [
-                            '<img src="' + iconUrl + '" style="width: 40px; height: 40px;" />',
-                        ].join(''),
-                        size: new naver.maps.Size(24, 24),
-                        anchor: new naver.maps.Point(12, 12),
-                    }
                 });
 
                 marker.setMap(map);
-                markers.push(marker);
 
-                var infowindow = new naver.maps.InfoWindow(); // 정보창 객체 생성
+                var hos1 = {
+                    name: '성수 병원1',
+                    addr: '서울특별시 성동구 성수동2가 314-5 S TOWER, 303호',
+                    info: '성수 병원1 입니다.',
+                    keyword: 'general',
+                    latitude: 37.5448692, // 병원1 위치 위도
+                    longitude: 127.0542999 // 병원1 위치 경도
+                };
 
-                // 클릭 이벤트 핸들러 등록
-                naver.maps.Event.addListener(marker, 'click', (function (marker, hospital) {
-                    return function () {
-                        var content = [
-                            '<div>',
-                            '<p>이름: ' + hospital.name + '</p>',
-                            '<p>소개: ' + hospital.info + '</p>',
-                            '<p>위치: ' + hospital.addr + '</p>',
-                            '</div>'
-                        ].join('');
+                var hos2 = {
+                    name: '성수 병원2',
+                    addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
+                    info: '성수 병원2 입니다.',
+                    keyword: 'pharmacy',
+                    latitude: 37.5439172, // 병원1 위치 위도
+                    longitude: 127.0572634 // 병원2 위치 경도
+                };
 
-                        infowindow.setContent(content); // 정보창 내용 설정
-                        infowindow.open(map, marker); // 정보창 열기
+                var hos3 = {
+                    name: '부산 병원',
+                    addr: '부산광역시 사상구 새벽로 226',
+                    info: "부산 병원 입니다.",
+                    keyword: "injection",
+                    latitude: 35.154907, // 병원 위치 위도
+                    longitude: 129.008523 // 병원 위치 경도
+                };
 
-                        // 해당 병원 위치로 지도 중심 이동
-                        map.setCenter(marker.getPosition());
-                    }
-                })(marker, hospital));
+                var hos4 = {
+                    name: '마디로한의원 뚝섬역',
+                    addr: '서울 성동구 성수일로 77 서울숲IT밸리 105-1호',
+                    info: "서울숲 IT벨리, 성수동 뚝섬역 4번출구 도보3분거리에 위치합니다.",
+                    keyword: "none",
+                    latitude: 37.5474332,// 병원 위치 위도
+                    longitude: 127.0503511 // 병원 위치 경도
+                };
 
-                var distance = calculateDistance(lat, lng, hospital.latitude, hospital.longitude);
+                var hos5 = {
+                    name: '연세웰치과의원',
+                    addr: '서울특별시 성동구 성수동2가 289-321 대한진공빌딩 4층',
+                    info: "성수역 2번출구 근처에 위치한 치과입니다.",
+                    keyword: "none",
+                    latitude: 37.5455540,// 병원 위치 위도
+                    longitude: 127.0571619 // 병원 위치 경도
+                };
 
-                document.getElementById('hos' + (i + 1) + 'Name').textContent = hospital.name;
-                document.getElementById('hos' + (i + 1) + 'Latitude').textContent = hospital.latitude;
-                document.getElementById('hos' + (i + 1) + 'Longitude').textContent = hospital.longitude;
-                document.getElementById('distance' + (i + 1)).textContent = distance;
-            }
 
-            // 마커 클릭시 해당 마커만 보이는 이벤트
-            document.getElementById('general').addEventListener('click', showGeneral);
-            document.getElementById('pharmacy').addEventListener('click', showPharmacy);
-            document.getElementById('injection').addEventListener('click', showInjecteion);
-            document.getElementById('none').addEventListener('click', showGeneralNone);
+                document.getElementById('latitude').textContent = lat;
+                document.getElementById('longitude').textContent = lng;
 
-            function showGeneral() {
+                var hospitals = [hos1, hos2, hos3, hos4, hos5]; // 병원 객체들을 배열에 저장
+                var markers = [];
+
+                // 거리에 따라 병원 배열 정렬
+                hospitals.sort(function (a, b) {
+                    var distanceA = calculateDistance(lat, lng, a.latitude, a.longitude);
+                    var distanceB = calculateDistance(lat, lng, b.latitude, b.longitude);
+                    return distanceA - distanceB;
+                });
+
                 for (var i = 0; i < hospitals.length; i++) {
                     var hospital = hospitals[i];
-                    var marker = markers[i];
+                    var markerPosition = new naver.maps.LatLng(hospital.latitude, hospital.longitude);
+                    var iconUrl = ''; // 아이콘 경로를 저장할 변수
 
+                    // 키워드에 따라 아이콘 경로 설정
                     if (hospital.keyword === 'general') {
-                        marker.setVisible(true); // 해당 병원 마커를 보이도록 설정
+                        iconUrl = "/static/image/medical-vector-free-icon-set-40.png"; // '일반' 키워드에 해당하는 아이콘 경로
+                    } else if (hospital.keyword === 'pharmacy') {
+                        iconUrl = '/static/image/medical-vector-free-icon-set-27.png'; // '약국' 키워드에 해당하는 아이콘 경로
+                    } else if (hospital.keyword === 'injection') {
+                        iconUrl = '/static/image/medical-vector-free-icon-set-39.png'; // '주사' 키워드에 해당하는 아이콘 경로
                     } else {
-                        marker.setVisible(false); // 해당 병원 마커를 숨기도록 설정
+                        iconUrl = '/static/image/medical-vector-free-icon-set-20.png'; // 키워드에 해당하는 아이콘 경로가 없는 경우 기본 아이콘 경로
+                    }
+
+                    var marker = new naver.maps.Marker({
+                        position: markerPosition,
+                        icon: {
+                            content: [
+                                '<img src="' + iconUrl + '" style="width: 40px; height: 40px;" />',
+                            ].join(''),
+                            size: new naver.maps.Size(24, 24),
+                            anchor: new naver.maps.Point(12, 12),
+                        }
+                    });
+
+                    marker.setMap(map);
+                    markers.push(marker);
+
+                    var infowindow = new naver.maps.InfoWindow(); // 정보창 객체 생성
+
+                    // 클릭 이벤트 핸들러 등록
+                    naver.maps.Event.addListener(marker, 'click', (function (marker, hospital) {
+                        return function () {
+                            var content = [
+                                '<div>',
+                                '<p>이름: ' + hospital.name + '</p>',
+                                '<p>소개: ' + hospital.info + '</p>',
+                                '<p>위치: ' + hospital.addr + '</p>',
+                                '</div>'
+                            ].join('');
+                            infowindow.setContent(content); // 정보창 내용 설정
+
+                            // 열려있는 정보창 클릭시 닫기 
+                            if (infowindow.getMap()) {
+                                infowindow.close()
+                            } else {
+                                infowindow.open(map, marker); // 정보창 열기
+                                // 해당 병원 위치로 지도 중심 이동
+                                map.setCenter(marker.getPosition());
+                            }
+                        }
+                    })(marker, hospital));
+
+                    var distance = calculateDistance(lat, lng, hospital.latitude, hospital.longitude);
+
+                    document.getElementById('hos' + (i + 1) + 'Name').textContent = hospital.name;
+                    document.getElementById('hos' + (i + 1) + 'Latitude').textContent = hospital.latitude;
+                    document.getElementById('hos' + (i + 1) + 'Longitude').textContent = hospital.longitude;
+                    document.getElementById('distance' + (i + 1)).textContent = distance;
+                }
+
+                // 마커 클릭시 해당 마커만 보이는 이벤트
+                document.getElementById('general').addEventListener('click', showGeneral);
+                document.getElementById('pharmacy').addEventListener('click', showPharmacy);
+                document.getElementById('injection').addEventListener('click', showInjecteion);
+                document.getElementById('none').addEventListener('click', showNone);
+
+                
+                var isVisible = false; // 일반 병원 마커의 가시성 상태를 저장하는 변수
+
+                function showGeneral() {
+                    isVisible = !isVisible; // 토글 변수 변경
+
+                    if (isVisible) {
+                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var marker = markers[i];
+                            marker.setVisible(true);
+                        }
+                    } else {
+                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var hospital = hospitals[i];
+                            var marker = markers[i];
+                            if (hospital.keyword !== 'general') {
+                                marker.setVisible(false);
+                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
+                            }
+                        }
                     }
                 }
-                console.log(marker);
-            }
 
-            function showPharmacy() {
-                for (var i = 0; i < hospitals.length; i++) {
-                    var hospital = hospitals[i];
-                    var marker = markers[i];
+                function showPharmacy() {
+                    isVisible = !isVisible; // 토글 변수 변경
 
-                    if (hospital.keyword === 'pharmacy') {
-                        marker.setVisible(true); // 해당 병원 마커를 보이도록 설정
+                    if (isVisible) {
+                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var marker = markers[i];
+                            marker.setVisible(true);
+                        }
                     } else {
-                        marker.setVisible(false); // 해당 병원 마커를 숨기도록 설정
+                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var hospital = hospitals[i];
+                            var marker = markers[i];
+                            if (hospital.keyword !== 'pharmacy') {
+                                marker.setVisible(false);
+                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
+                            }
+                        }
                     }
                 }
-            }
 
-            function showInjecteion() {
-                for (var i = 0; i < hospitals.length; i++) {
-                    var hospital = hospitals[i];
-                    var marker = markers[i];
+                function showInjecteion() {
+                    isVisible = !isVisible; // 토글 변수 변경
 
-                    if (hospital.keyword === 'injection') {
-                        marker.setVisible(true); // 해당 병원 마커를 보이도록 설정
+                    if (isVisible) {
+                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var marker = markers[i];
+                            marker.setVisible(true);
+                        }
                     } else {
-                        marker.setVisible(false); // 해당 병원 마커를 숨기도록 설정
+                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var hospital = hospitals[i];
+                            var marker = markers[i];
+                            if (hospital.keyword !== 'injection') {
+                                marker.setVisible(false);
+                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
+                            }
+                        }
                     }
                 }
-            }
 
-            function showGeneralNone() {
-                for (var i = 0; i < hospitals.length; i++) {
-                    var hospital = hospitals[i];
-                    var marker = markers[i];
+                function showNone() {
+                    isVisible = !isVisible; // 토글 변수 변경
 
-                    if (hospital.keyword === 'none') {
-                        marker.setVisible(true); // 해당 병원 마커를 보이도록 설정
+                    if (isVisible) {
+                        // 일반 병원 마커와 일반 병원이 아닌 병원 마커를 모두 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var marker = markers[i];
+                            marker.setVisible(true);
+                        }
                     } else {
-                        marker.setVisible(false); // 해당 병원 마커를 숨기도록 설정
+                        // 일반 병원이 아닌 병원 마커만 보이도록 설정
+                        for (var i = 0; i < hospitals.length; i++) {
+                            var hospital = hospitals[i];
+                            var marker = markers[i];
+                            if (hospital.keyword !== 'none') {
+                                marker.setVisible(false);
+                                infowindow.close(); // 다른 마커를 선택 했을 경우 해당 병원 정보창 닫기 
+                            }
+                        }
                     }
-                }
-            }
-        });
-    } else {
-        alert("Geolocation을 지원하지 않는 브라우저입니다.");
+                } 
+            });
+        } else {
+            alert("Geolocation을 지원하지 않는 브라우저입니다.");
+        }
     }
-}
 
 
     initMap();
