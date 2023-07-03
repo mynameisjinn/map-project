@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>길찾기 서비스</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
+</head>
+<body>
+    <button onclick="openDirection()">현재 위치에서 길찾기</button>
+    <script>
+        function openDirection() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var startCoords = position.coords.latitude + "," + position.coords.longitude;
+                    var startName = "현재 위치";
+
+                    var endCoords = "14143946.757461008,4515419.026746914";
+                    var endName = "연세웰치과의원";
+                    var endId = "1690022132";
+
+                    var url = "https://map.naver.com/v5/directions/" +
+                        startCoords + "," + encodeURIComponent(startName) + ",,USER_POSITION/" +
+                        endCoords + "," + encodeURIComponent(endName) + "," + endId + ",PLACE_POI/-/transit?c=15,0,0,0,dh";
+
+                    window.location.href = url;
+                });
+            } else {
+                alert("현재 위치를 가져올 수 없습니다.");
+            }
+        }
+    </script>
+</body>
+</html>
