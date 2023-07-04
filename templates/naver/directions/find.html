@@ -3,32 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>길찾기 서비스</title>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
 </head>
 <body>
     <button onclick="openDirection()">지정된 위치에서 길찾기</button>
     <script>
         function openDirection() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var startCoords = position.coords.latitude + "," + position.coords.longitude;
-                    var startName = "현재 위치";
+            // 현재주소 (고정)
+            var startCoords = "14143708.645070199,4514672.40211761";
+            var startName = "노스스타컨설팅";
+            var startId = "13486668";
 
-                    var endCoords = "14143946.757461008,4515419.026746914";
-                    var endName = "연세웰치과의원";
-                    var endId = "1690022132";
+            // 도착지 
 
-                    var url = "https://map.naver.com/v5/directions/" +
-                        startCoords + "," + encodeURIComponent(startName) + ",,USER_POSITION/" +
-                        endCoords + "," + encodeURIComponent(endName) + "," + endId + ",PLACE_POI/-/transit?c=15,0,0,0,dh";
+            // var endCoords = "14143946.757461008,4515419.026746914";
+            // var endName = "연세웰치과의원";
+            // var endId = "1690022132";
 
-                    window.location.href = url;
-                });
-            } else {
-                alert("현재 위치를 가져올 수 없습니다.");
-            }
+            // var endCoords = "14358494.426199745,4185823.798764387";
+            // var endName = "의료법인 센텀의료재단 서부산센텀병원";
+            // var endId = "13050735";
+
+            // var endCoords = "14143613.84539185,4515313.9513431005";
+            // var endName = "성수탑내과의원";
+            // var endId = "1857861154";
+
+            // var endCoords = "14143950.174969379,4515194.233498791";
+            // var endName = "성수하나이비인후과의원";
+            // var endId = "1751225850";
+
+            // var endCoords = "14143191.410188187,4515656.011878267";
+            // var endName = "마디로한의원 뚝섬역";
+            // var endId = "1238031320";
+
+            var url = "https://map.naver.com/v5/directions/" +
+                startCoords + "," + encodeURIComponent(startName) + "," + startId + ",PLACE_POI/" +
+                endCoords + "," + encodeURIComponent(endName) + "," + endId + ",PLACE_POI/-/transit?c=15,0,0,0,dh";
+
+            window.location.href = url;
         }
     </script>
 </body>
 </html>
-

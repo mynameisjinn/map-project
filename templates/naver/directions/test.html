@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEST DIRECTIONS</title>
+    <title>TEST PAGE</title>
     <script type="text/javascript"
         src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=1d91fzypff"></script>
 
@@ -154,7 +154,7 @@
                     <p>경도: <span id="hos1Longitude"></span></p>
                     <p>거리: <span id="distance1"></span> km</p>
                     <p>키워드: <span id="keyword1"></span></p>
-                    <button>길찾기</button>
+                    <button class="distanceBtn">길찾기</button>
                 </div>
 
                 <div class="hos-info" id="hos2Info">
@@ -163,7 +163,7 @@
                     <p>경도: <span id="hos2Longitude"></span></p>
                     <p>거리: <span id="distance2"></span> km</p>
                     <p>키워드: <span id="keyword2"></span></p>
-                    <button>길찾기</button>
+                    <button class="distanceBtn">길찾기</button>
                 </div>
 
 
@@ -173,7 +173,7 @@
                     <p>경도: <span id="hos3Longitude"></span></p>
                     <p>거리: <span id="distance3"></span> km</p>
                     <p>키워드: <span id="keyword3"></span></p>
-                    <button>길찾기</button>
+                    <button class="distanceBtn">길찾기</button>
                 </div>
 
                 <div class="hos-info" id="hos4Info">
@@ -182,7 +182,7 @@
                     <p>경도: <span id="hos4Longitude"></span></p>
                     <p>거리: <span id="distance4"></span> km</p>
                     <p>키워드: <span id="keyword4"></span></p>
-                    <button>길찾기</button>
+                    <button class="distanceBtn">길찾기</button>
                 </div>
 
                 <div class="hos-info" id="hos5Info">
@@ -191,7 +191,7 @@
                     <p>경도: <span id="hos5Longitude"></span></p>
                     <p>거리: <span id="distance5"></span> km</p>
                     <p>키워드: <span id="keyword5"></span></p>
-                    <button>길찾기</button>
+                    <button class="distanceBtn">길찾기</button>
                 </div>
             </div>
         </div>
@@ -240,30 +240,36 @@
                 marker.setMap(map);
 
                 var hos1 = {
-                    name: '성수 병원1',
+                    name: '성수탑내과의원',
                     addr: '서울특별시 성동구 성수동2가 314-5 S TOWER, 303호',
-                    info: '성수 병원1 입니다.',
+                    info: '*지하철2호선 성수역4번 출구에서 나와 직진20 M *버스 2016 , 2224, 마을버스 성동10번 버스 이용',
                     keyword: 'general',
                     latitude: 37.5448692, // 병원1 위치 위도
-                    longitude: 127.0542999 // 병원1 위치 경도
+                    longitude: 127.0542999, // 병원1 위치 경도
+                    endId: "1857861154",
+                    endCoords: "14143613.84539185,4515313.9513431005"
                 };
 
                 var hos2 = {
-                    name: '성수 병원2',
+                    name: '성수하나이비인후과의원',
                     addr: '서울특별시 성동구 성수동2가 317-3 베델플레이스',
-                    info: '성수 병원2 입니다.',
+                    info: '성수역 3번출구 앞 10미터 거리에 위치하고 있습니다',
                     keyword: 'pharmacy',
                     latitude: 37.5439172, // 병원1 위치 위도
-                    longitude: 127.0572634 // 병원2 위치 경도
+                    longitude: 127.0572634, // 병원2 위치 경도
+                    endId: "1751225850",
+                    endCoords: "14143950.174969379,4515194.233498791"
                 };
 
                 var hos3 = {
-                    name: '부산 병원',
+                    name: '의료법인 센텀의료재단 서부산센텀병원',
                     addr: '부산광역시 사상구 새벽로 226',
-                    info: "부산 병원 입니다.",
+                    info: "정형외과전문의 6명, 마취통증의학과전문의 3명 외 전문의 5명",
                     keyword: 'injection',
-                    latitude: 35.154907, // 병원 위치 위도
-                    longitude: 129.008523 // 병원 위치 경도
+                    latitude: 35.1613892, // 병원 위치 위도
+                    longitude: 128.9845969, // 병원 위치 경도
+                    endId: "13050735",
+                    endCoords: "14358494.426199745,4185823.798764387"
                 };
 
                 var hos4 = {
@@ -272,7 +278,9 @@
                     info: "서울숲 IT벨리, 성수동 뚝섬역 4번출구 도보3분거리에 위치합니다.",
                     keyword: 'none',
                     latitude: 37.5474332,// 병원 위치 위도
-                    longitude: 127.0503511 // 병원 위치 경도
+                    longitude: 127.0503511, // 병원 위치 경도
+                    endId: "1238031320",
+                    endCoords: "14143191.410188187,4515656.011878267"
                 };
 
                 var hos5 = {
@@ -281,7 +289,9 @@
                     info: "성수역 2번출구 근처에 위치한 치과입니다.",
                     keyword: 'none',
                     latitude: 37.5455540,// 병원 위치 위도
-                    longitude: 127.0571619 // 병원 위치 경도
+                    longitude: 127.0571619, // 병원 위치 경도
+                    endId: "1690022132",
+                    endCoords: "14143946.757461008,4515419.026746914"
                 };
 
 
@@ -382,7 +392,7 @@
                         if (isVisible || hospital.keyword === selectedKeyword) {
                             marker.setVisible(true);
                             // console.log(selectedKeyword);
-                        } 
+                        }
                         else {
                             marker.setVisible(false);
                             infowindow.close();
@@ -460,6 +470,40 @@
                         location.reload();
                     }
                 }
+
+                // 길찾기 
+                var distanceButtons = document.getElementsByClassName('distanceBtn');
+
+                for (var i = 0; i < distanceButtons.length; i++) {
+                    distanceButtons[i].addEventListener('click', openDirection);
+                }
+
+                function openDirection() {
+                    alert("목적지를 검색합니다. 출발지를 지정해주세요.");
+
+                    // 현재주소 (고정)
+                    var startCoords = "14143708.645070199,4514672.40211761";
+                    var startName = "노스스타컨설팅";
+                    var startId = "13486668";
+
+                    // 도착지
+                    var endCoords, endName, endId;
+
+                    var hospitalInfo = this.parentElement;
+                    var hospitalIndex = Array.from(hospitalInfo.parentElement.children).indexOf(hospitalInfo);
+                    var hospital = hospitals[hospitalIndex];
+
+                    endCoords = hospital.endCoords;
+                    endName = hospital.name;
+                    endId = hospital.endId;
+
+                    var url = "https://map.naver.com/v5/directions/" +
+                        startCoords + "," + encodeURIComponent(startName) + "," + startId + ",PLACE_POI/" +
+                        endCoords + "," + encodeURIComponent(endName) + "," + endId + ",PLACE_POI/-/transit?c=15,0,0,0,dh";
+                                        window.location.href = url;
+
+                                    }
+
             });
         } else {
             alert("Geolocation을 지원하지 않는 브라우저입니다.");
